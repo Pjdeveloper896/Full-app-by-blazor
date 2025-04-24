@@ -19,3 +19,7 @@ pattern = "**/{*.cs,*.razor}"
 
   [languages.csharp.languageServer]
   start = ["omnisharp", "--languageserver"]
+
+[[ports]]
+localPort = 5000
+externalPort = 80

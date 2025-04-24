@@ -1,7 +1,157 @@
-@page "/"
+@page "/resume"
+@using System.Collections.Generic
+@using Microsoft.AspNetCore.Components.Forms
 
-<h1>Hello, Replit!</h1>
+<h1>Resume Builder</h1>
 
-Welcome to your new Blazor Repl.
+@if (step == 1)
+{
+    <h3>Personal Info</h3>
+    <EditForm Model="@info" OnValidSubmit="NextStep">
+        <InputText @bind-Value="info.Name" placeholder="Name" class="form-control mb-2" />
+        <InputText @bind-Value="info.Email" placeholder="Email" class="form-control mb-2" />
+        <button type="submit">Next</button>
+    </EditForm>
+}
 
-<SurveyPrompt Title="Find an issue with this template?" />
+@if (step == 2)
+{
+    <h3>Education</h3>
+    <EditForm Model="@eduInput" OnValidSubmit="AddEducation">
+        <InputText @bind-Value="eduInput.School" placeholder="School" class="form-control mb-2" />
+        <InputText @bind-Value="eduInput.Degree" placeholder="Degree" class="form-control mb-2" />
+        <InputText @bind-Value="eduInput.Year" placeholder="Graduation Year" class="form-control mb-2" />
+        <button type="submit">Add</button>
+    </EditForm>
+
+    <ul>
+        @foreach (var edu in educationList)
+        {
+            <li>@edu.Degree at @edu.School (@edu.Year)</li>
+        }
+    </ul>
+    <button style="background-color:light green;color:white;"@onclick="NextStep">Next</button>
+}
+
+@if (step == 3)
+{
+    <h3>Experience</h3>
+    <EditForm Model="@expInput" OnValidSubmit="AddExperience">
+        <InputText @bind-Value="expInput.Company" placeholder="Company" class="form-control mb-2" />
+        <InputText @bind-Value="expInput.Role" placeholder="Role" class="form-control mb-2" />
+        <InputText @bind-Value="expInput.Duration" placeholder="Duration" class="form-control mb-2" />
+        <button type="submit">Add</button>
+    </EditForm>
+
+    <ul>
+        @foreach (var exp in experienceList)
+        {
+            <li>@exp.Role at @exp.Company (@exp.Duration)</li>
+        }
+    </ul>
+    <button @onclick="NextStep"class=".button">Next</button>
+}
+
+@if (step == 4)
+{
+    <h3>Skills</h3>
+    <EditForm Model="@skillModel" OnValidSubmit="AddSkill">
+        <InputText @bind-Value="skillModel.Skill" placeholder="Skill" class="form-control mb-2" />
+        <button type="submit"class=".button">Add</button>
+    </EditForm>
+
+    <ul>
+        @foreach (var skill in skillList)
+        {
+            <li>@skill</li>
+        }
+    </ul>
+    <button @onclick="NextStep" class=".button">Next</button>
+}
+
+@if (step == 5)
+{
+    <h3>Resume Preview</h3>
+    <p><b>Name:</b> @info.Name</p>
+    <p><b>Email:</b> @info.Email</p>
+
+    <h4>Education</h4>
+    <ul>
+        @foreach (var edu in educationList)
+        {
+            <li>@edu.Degree at @edu.School (@edu.Year)</li>
+        }
+    </ul>
+
+    <h4>Experience</h4>
+    <ul>
+        @foreach (var exp in experienceList)
+        {
+            <li>@exp.Role at @exp.Company (@exp.Duration)</li>
+        }
+    </ul>
+
+    <h4>Skills</h4>
+    <ul>
+        @foreach (var skill in skillList)
+        {
+            <li>@skill</li>
+        }
+    </ul>
+    <button @onclick="() => step = 1">Start Over</button>
+}
+
+@code {
+    private int step = 1;
+
+    // Models
+    public class PersonalInfo { public string Name { get; set; } = ""; public string Email { get; set; } = ""; }
+    public class Education { public string School { get; set; } = ""; public string Degree { get; set; } = ""; public string Year { get; set; } = ""; }
+    public class Experience { public string Company { get; set; } = ""; public string Role { get; set; } = ""; public string Duration { get; set; } = ""; }
+    public class SkillModel { public string Skill { get; set; } = ""; }
+
+    // Main Models
+    PersonalInfo info = new();
+    Education eduInput = new();
+    Experience expInput = new();
+    SkillModel skillModel = new();
+
+    List<Education> educationList = new();
+    List<Experience> experienceList = new();
+    List<string> skillList = new();
+
+    void NextStep() => step++;
+
+    void AddEducation()
+    {
+        educationList.Add(new Education
+        {
+            School = eduInput.School,
+            Degree = eduInput.Degree,
+            Year = eduInput.Year
+        });
+
+        eduInput = new();
+    }
+
+    void AddExperience()
+    {
+        experienceList.Add(new Experience
+        {
+            Company = expInput.Company,
+            Role = expInput.Role,
+            Duration = expInput.Duration
+        });
+
+        expInput = new();
+    }
+
+    void AddSkill()
+    {
+        if (!string.IsNullOrWhiteSpace(skillModel.Skill))
+        {
+            skillList.Add(skillModel.Skill);
+            skillModel.Skill = "";
+        }
+    }
+}
