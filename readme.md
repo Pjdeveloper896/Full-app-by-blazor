@@ -1,4 +1,10 @@
-# [Blazor](https://dotnet.microsoft.com/en-us/apps/aspnet/web-apps/blazor) on Replit
+# [Blazor](https://dotnet.microsoft.com/en-us/apps/aspnet/web-apps/blazor) 
+## full stack app
+>counter
+>resume Builder
+>weather forecast
+## thanks
+> to replit teamplate of blazor c# 
 
 A framework for building interactive client-side web UI with .NET
 
